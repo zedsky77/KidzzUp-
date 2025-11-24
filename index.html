@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidzzUp! - Learn Up, Level Up!</title>
+    <!-- Bootstrap CSS dan Icons untuk responsivitas dan ikon -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts untuk font menarik -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f8ff; /* Latar belakang biru muda */
+            color: #333;
+        }
+        .hero {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 600;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        .btn-primary {
+            background-color: #ff6b6b;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+        .video-section {
+            padding: 50px 0;
+            background-color: white;
+        }
+        .video-card {
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: opacity 0.5s ease-in-out; /* Animasi fade */
+        }
+        .video-card iframe {
+            width: 100%;
+            height: 250px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        /* Banner Alert di Awalan */
+        .welcome-banner {
+            background-color: #4facfe;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            display: none; /* Awalnya tersembunyi, muncul via JS */
+        }
+        .welcome-banner .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        /* Filter Buttons dan Search */
+        .filter-buttons {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .filter-buttons .btn {
+            margin: 5px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-container input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        /* Responsivitas tambahan */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .welcome-banner {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .filter-buttons .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .search-container input {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Banner Alert Selamat Datang di Awalan -->
+    <div id="welcomeBanner" class="welcome-banner">
+        <button class="close-btn" onclick="closeBanner()">&times;</button>
+        <h5>Selamat Datang di KidzzUp!</h5>
+        <p>"Learn Up, Level Up!" Belajar dengan video interaktif untuk anak sekolah dasar. Jelajahi materi matematika, bahasa, dan IPA sekarang!</p>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="#hero">
+            <img src="images/logo.png" alt="KidzzUp!" width="65"> KidzzUp! Level Up!
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#hero">Beranda</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#videos">Video Pembelajaran</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Kontak</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tombol Login -->
+        <button class="btn btn-outline-primary ms-1" data-bs-toggle="modal" data-bs-target="#loginModal" title="Login">
+            <i class="bi bi-person-circle"></i>
+        </button>
+    </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="container">
+            <h1>Selamat Datang di KidzzUp!</h1>
+            <p>Belajar matematika, bahasa, dan IPAS jadi seru dengan video interaktif. Cocok untuk anak sekolah dasar!</p>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#subscriptionModal">Mulai Belajar Sekarang</button>
+        </div>
+    </section>
+
+    <!-- Modal Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login ke KidzzUp!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Masukkan email Anda" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Masukkan password Anda" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <small class="text-muted mt-2 d-block">Belum punya akun? <a href="#" data-bs-toggle="modal" data-bs-target="#subscriptionModal">Daftar di sini</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Alert untuk Berlangganan -->
+    <div class="modal fade" id="subscriptionModal" tabindex="-1" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="subscriptionModalLabel">Berlangganan KidzzUp!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Dapatkan akses penuh ke semua video pembelajaran dan materi eksklusif!</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success" onclick="alert('Redirect ke pembayaran untuk Rp100.000/bulan')">Berlangganan 1 Bulan - Rp100.000</button>
+                        <button class="btn btn-info" onclick="alert('Trial 1 minggu dimulai! Daftar di sini')">Coba Trial 1 Minggu (Gratis)</button>
+                    </div>
+                    <small class="text-muted mt-2 d-block">* Trial berlaku untuk akses terbatas. Pembayaran via transfer atau e-wallet.</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Pembelajaran Section -->
+    <section id="videos" class="video-section">
+        <div class="container">
+            <h2 class="text-center mb-4">Video Pembelajaran Seru</h2>
+            <p class="text-center mb-5">Tonton dan pelajari berbagai materi langsung dari KidzzUp!. Klik play dan mulai!</p>
+            
+            <!-- Input Pencarian -->
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Cari video berdasarkan judul atau deskripsi..." onkeyup="searchVideos()">
+            </div>
+            
+           <!-- Tombol Filter Kelas -->
+            <div class="filter-buttons">
+                <button class="btn btn-outline-primary" onclick="filterVideos('all')">Semua</button>
+                <button class="btn btn-outline-primary" onclick="filterVideos('1')">Kelas 1</button>
+                <button class="btn btn-outline-primary" onclick="filterVideos('2')">Kelas 2</button>
+                <button class="btn btn-outline-primary" onclick="filterVideos('3')">Kelas 3</button>
+                <button class="btn btn-outline-primary" onclick="filterVideos('4')">Kelas 4</button>
+                <button class="btn btn-outline-primary" onclick="filterVideos('5')">Kelas 5</button>
+                <button class="btn btn-outline-primary" onclick="filterVideos('6')">Kelas 6</button>
+            </div>
+            
+            <div class="row" id="videoContainer">
+                <!-- Video 1: Kelas 1 -->
+                <div class="col-md-4 col-sm-6 video-card" data-kelas="1">
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/p6C1icRnUm4" title="Video Matematika Kelas 1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                        <div class="p-3">
+                            <h5>Membaca Jam (Kelas 1)</h5>
+                            <p>Video animasi anak membaca jam.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Video 2: Kelas 2 -->
+                <div class="col-md-4 col-sm-6 video-card" data-kelas="2">
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/dldAyGWvGZs" title="Video Matematika Kelas 2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                        <div class="p-3">
+                            <h5>Pecahan (Kelas 2)</h5>
+                            <p>Video Pembelajaran Mengenal Pecahan.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Video 3: Kelas 3 -->
+                <div class="col-md-4 col-sm-6 video-card" data-kelas="3">
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/IH4oIGKkXJs" title="Video Matematika Kelas 2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                        <div class="p-3">
+                            <h5>Dunia Hewan (Kelas 3)</h5>
+                            <p>Game Smart IPAS Mengenal Hewan.</p>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Video 4: Kelas 4 -->
+                <div class="col-md-4 col-sm-6 video-card" data-kelas="4">
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/N6XcTch1l2c" title="Video Matematika Kelas 2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                        <div class="p-3">
+                            <h5>Perubahan Wujud Benda (Kelas 4)</h5>
+                            <p>Macam-macam Perubahan Wujud Benda.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Video 5: Kelas 4 -->
+                <div class="col-md-4 col-sm-6 video-card" data-kelas="4">
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/u58LYXrZk2M" title="Video Matematika Kelas 2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                        <div class="p-3">
+                            <h5>Aku dan Kebutuhanku (Kelas 4)</h5>
+                            <p>Materi Aku dan Kebutuhanku.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Video 6: Kelas 5 -->
+                <div class="col-md-4 col-sm-6 video-card" data-kelas="5">
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/FSjvNqLg1bI" title="Video Matematika Kelas 2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                        <div class="p-3">
+                            <h5>Kelipatan Persekutuan (Kelas 5)</h5>
+                            <p>Mengenal Kelipatan Persekutuan.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Video 7: Kelas 6 -->
+                <div class="col-md-4 col-sm-6 video-card" data-kelas="6">
+                    <div class="video-card">
+                        <iframe src="https://www.youtube.com/embed/vfbpXX22BNs" title="Video Matematika Kelas 2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                        <div class="p-3">
+                            <h5>Sistem Tata Surya (Kelas 6)</h5>
+                            <p>Pengenalan Tata Surya.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <p>&copy; 2025 KidzzUp! Bimbel Online SD. Semua hak dilindungi.</p>
+            <p>Kontak: kidzzup@gmail.com | Telepon: 0857-0212-7777</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script untuk Banner Alert, Filter, Pencarian, dan Login -->
+    <script>
+        window.onload = function() {
+            document.getElementById('welcomeBanner').style.display = 'block';
+        };
+        function closeBanner() {
+            document.getElementById('welcomeBanner').style.display = 'none';
+        }
+        // Fungsi Filter Video dengan Animasi Fade
+        function filterVideos(kelas) {
+            const videos = document.querySelectorAll('[data-kelas]');
+            videos.forEach(video => {
+                if (kelas === 'all' || video.getAttribute('data-kelas') === kelas) {
+                    video.style.opacity = '0'; // Fade out dulu
+                    setTimeout(() => {
+                        video.style.display = 'block';
+                        video.style.opacity = '1'; // Fade in
+                    }, 250); // Delay untuk efek
+                } else {
+                    video.style.opacity = '0'; // Fade out
+                    setTimeout(() => {
+                        video.style.display = 'none';
+                    }, 500); // Tunggu fade selesai
+                }
+            });
+        }
+        // Fungsi Pencarian Video
+        function searchVideos() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const videos = document.querySelectorAll('[data-kelas]');
+            videos.forEach(video => {
+                const title = video.querySelector('h5').textContent.toLowerCase();
+                const desc = video.querySelector('p').textContent.toLowerCase();
+                if (title.includes(query) || desc.includes(query)) {
+                    video.style.opacity = '0';
+                    setTimeout(() => {
+                        video.style.display = 'block';
+                        video.style.opacity = '1';
+                    }, 250);
+                } else {
+                    video.style.opacity = '0';
+                    setTimeout(() => {
+                        video.style.display = 'none';
+                    }, 500);
+                }
+            });
+        }
+        // Fungsi Handle Login Form
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            // Demo: Alert konfirmasi (ganti dengan AJAX ke backend untuk autentikasi nyata)
+            if (email && password) {
+                alert(`Login berhasil untuk email: ${email}!`);
+                // Tutup modal setelah login
+                const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                modal.hide();
+            } else {
+                alert('Harap isi email dan password!');
+            }
+        });
+    </script>
+    <script>
+    // Smooth Scroll untuk Navigasi
+    document.querySelectorAll('a.nav-link').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            // Jika href mulai dari "#"
+            if (this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const targetID = this.getAttribute('href');
+                const target
