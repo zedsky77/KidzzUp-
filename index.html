@@ -3,404 +3,1283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KidzzUp! - Learn Up, Level Up!</title>
-    <!-- Bootstrap CSS dan Icons untuk responsivitas dan ikon -->
+    <title>KidzzUp! - Belajar Gratis, Jadi Juara!</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Fonts untuk font menarik -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary-color: #4facfe;
+            --secondary-color: #ff6b6b;
+            --accent-color: #feca57;
+            --success-color: #2ecc71;
+            --bg-light: #f8fbff;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f0f8ff; /* Latar belakang biru muda */
+            background-color: var(--bg-light);
             color: #333;
+            scroll-behavior: smooth;
         }
+
+        h1, h2, h3, .navbar-brand {
+            font-family: 'Fredoka', sans-serif;
+        }
+
         .hero {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
             padding: 100px 0;
-            text-align: center;
+            border-bottom-left-radius: 60px;
+            border-bottom-right-radius: 60px;
+            position: relative;
+            overflow: hidden;
         }
-        .hero h1 {
-            font-size: 3rem;
+
+        #fireworksCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Agar tidak menghalangi klik pada tombol */
+            z-index: 1;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 2; /* Menempatkan konten di atas kembang api */
+        }
+
+        /* Elemen dekoratif marketing */
+        .hero::before {
+            content: 'FREE';
+            position: absolute;
+            top: 10%;
+            right: 5%;
+            font-size: 8rem;
+            font-weight: bold;
+            opacity: 0.1;
+            transform: rotate(20deg);
+        }
+
+        .navbar {
+            padding: 12px 0;
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            margin-right: 10px;
+            border-radius: 10px;
+        }
+
+        .video-card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(79, 172, 254, 0.2);
+        }
+
+        .badge-free {
+            background-color: var(--success-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
             font-weight: 600;
         }
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-        }
-        .btn-primary {
-            background-color: #ff6b6b;
+
+        .btn-marketing {
+            background: var(--accent-color);
+            color: #000 !important; /* Memastikan teks hitam */
             border: none;
-            padding: 15px 30px;
-            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
         }
-        .video-section {
-            padding: 50px 0;
-            background-color: white;
+
+        .btn-marketing:hover {
+            background: #ffd32a;
+            transform: scale(1.05);
+            color: #000;
         }
-        .video-card {
-            margin-bottom: 30px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: opacity 0.5s ease-in-out; /* Animasi fade */
+
+        /* Penyesuaian tombol outline agar teks berwarna hitam */
+        .btn-hero-outline {
+            border: 2px solid #000 !important;
+            color: #000 !important;
+            font-weight: 600;
+            transition: all 0.3s;
         }
-        .video-card iframe {
-            width: 100%;
-            height: 250px;
+
+        .btn-hero-outline:hover {
+            background: #000;
+            color: #fff !important;
         }
-        footer {
-            background-color: #333;
+
+        /* Teks informasi di bawah tombol */
+        .hero-info-text {
+            color: #000 !important;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .btn-marketing:hover {
+            background: #ffd32a;
+            transform: scale(1.05);
+            color: #000;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            padding: 20px 0;
-            text-align: center;
+            font-weight: bold;
         }
-        /* Banner Alert di Awalan */
-        .welcome-banner {
-            background-color: #4facfe;
+
+        /* Marketing Banner */
+        .promo-bar {
+            background: #ff6b6b;
             color: white;
-            padding: 15px;
-            text-align: center;
-            position: relative;
-            display: none; /* Awalnya tersembunyi, muncul via JS */
+            padding: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
-        .welcome-banner .close-btn {
-            position: absolute;
-            top: 10px;
+
+        /* Message Box Custom */
+        #customAlert {
+            position: fixed;
+            top: 20px;
             right: 20px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
+            z-index: 9999;
+            display: none;
+            min-width: 300px;
         }
-        /* Filter Buttons dan Search */
-        .filter-buttons {
-            margin-bottom: 30px;
-            text-align: center;
+
+        .floating-mascot {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 8px 15px rgba(0,0,0,0.1));
+            animation: superFloat 4s ease-in-out infinite;
         }
-        .filter-buttons .btn {
-            margin: 5px;
+
+        /* Animasi yang lebih hidup seperti GIF */
+        @keyframes superFloat {
+            0%, 100% { transform: translateY(0px) rotate(-3deg) scale(1); }
+            50% { transform: translateY(-20px) rotate(3deg) scale(1.05); }
         }
-        .search-container {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .search-container input {
-            width: 100%;
-            max-width: 400px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        /* Responsivitas tambahan */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
+
+        @keyframes videoFadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.95); 
             }
-            .hero p {
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        @keyframes videoFadeOut {
+            from { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+            to { 
+                opacity: 0; 
+                transform: scale(0.95); 
+            }
+        }
+
+        .video-animate-in {
+            animation: videoFadeIn 0.5s ease forwards;
+        }
+
+        .video-animate-out {
+            animation: videoFadeOut 0.4s ease forwards;
+        }
+
+        .pulse-light {
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.5; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.5; transform: scale(0.95); }
+        }
+
+        .filter-scroll-container {
+            display: flex;
+            gap: 10px; /* Jarak antar tombol */
+            flex-wrap: wrap;            justify-content: center; /* Mengetengahkan tombol */
+            padding: 10px 5px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .filter-btn {
+            flex: 0 1 auto; /* Tombol menyesuaikan ukuran konten */
+            border-width: 2px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            padding: 8px 20px !important;
+            font-size: 0.9rem; /* Ukuran font sedikit lebih kecil untuk mobile */
+        }
+
+        @media (min-width: 768px) {
+            .filter-scroll-container {
+                gap: 15px;
+                padding: 10px 15px;
+            }
+            .filter-btn {
+                padding: 10px 25px !important;
                 font-size: 1rem;
-            }
-            .welcome-banner {
-                padding: 10px;
-                font-size: 0.9rem;
-            }
-            .filter-buttons .btn {
-                display: block;
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            .search-container input {
-                max-width: 100%;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Banner Alert Selamat Datang di Awalan -->
-    <div id="welcomeBanner" class="welcome-banner">
-        <button class="close-btn" onclick="closeBanner()">&times;</button>
-        <h5>Selamat Datang di KidzzUp!</h5>
-        <p>"Learn Up, Level Up!" Belajar dengan video interaktif untuk anak sekolah dasar. Jelajahi materi matematika, bahasa, dan IPA sekarang!</p>
+    <div class="promo-bar text-center">
+        🔥 <strong>HOT PROMO:</strong> Daftar hari ini dan dapatkan E-Book Materi Eksklusif secara GRATIS!
     </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-    <div class="container">
-        <a class="navbar-brand" href="#hero">
-            <img src="images/logo.png" alt="KidzzUp!" width="65"> KidzzUp! Level Up!
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <!-- Custom Alert Notification -->
+    <div id="customAlert" class="alert alert-success alert-dismissible fade show shadow-lg" role="alert">
+        <span id="alertMessage"></span>
+        <button type="button" class="btn-close" onclick="hideAlert()"></button>
+    </div>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#hero">Beranda</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#videos">Video Pembelajaran</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#contact">Kontak</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="images/logo.png" alt="Logo KidzzUp" class="logo-img shadow-sm">
+                <span class="fs-3 fw-bold text-primary">Kidzz<span class="text-warning">Up!</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Menggunakan mx-auto untuk memposisikan menu di tengah pada desktop, dan text-center untuk mobile -->
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#hero">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#videos">Video Pembelajaran</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Kontak</a>
+                    </li>
+                </ul>
+                <!-- Menggunakan justify-content-center agar tombol rata tengah di HP, dan justify-content-lg-end untuk Desktop -->
+                <div id="authPlaceholder" class="d-flex justify-content-center justify-content-lg-end align-items-center gap-2 py-3 py-lg-0">
+                    <button class="btn btn-outline-primary rounded-pill px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="bi bi-person-circle me-2"></i>Masuk
+                    </button>
+                </div>
+            </div>
         </div>
-
-        <!-- Tombol Login -->
-        <button class="btn btn-outline-primary ms-1" data-bs-toggle="modal" data-bs-target="#loginModal" title="Login">
-            <i class="bi bi-person-circle"></i>
-        </button>
-    </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero">
-        <div class="container">
-            <h1>Selamat Datang di KidzzUp!</h1>
-            <p>Belajar matematika, bahasa, dan IPAS jadi seru dengan video interaktif. Cocok untuk anak sekolah dasar!</p>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#subscriptionModal">Mulai Belajar Sekarang</button>
+    <section id="hero" class="hero d-flex align-items-center">
+        <canvas id="fireworksCanvas"></canvas>
+        
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="mb-2">
+                        <span class="display-4 fw-bold text-primary" style="font-family: 'Fredoka', sans-serif; text-shadow: 2px 2px 10px rgba(255,255,255,0.5);">
+                            Kidzz<span class="text-warning">Up!</span>
+                        </span>
+                    </div>
+                    <span class="badge bg-white text-primary mb-3 px-3 py-2 rounded-pill fw-bold">#1 Platform Belajar SD Gratis</span>
+                    <h1 class="display-3 fw-bold mb-4 text-dark">Akses Ribuan Materi Belajar <br><span class="text-warning">Tanpa Biaya Sepeserpun!</span></h1>
+                    <p class="lead mb-5 text-dark">Bantu anak Anda meraih ranking 1 dengan video pembelajaran interaktif. Matematika, IPAS, dan Bahasa jadi jauh lebih mudah dan menyenangkan!</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="#videos" class="btn btn-warning btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg btn-marketing">Mulai Belajar Sekarang</a>
+                        <button class="btn btn-hero-outline btn-lg rounded-pill px-5 py-3 fw-bold" data-bs-toggle="modal" data-bs-target="#benefitModal">Mengapa Gratis?</button>
+                    </div>
+                    <div class="mt-5 d-none d-md-block">
+                        <small class="hero-info-text"><i class="bi bi-people-fill me-2"></i> Dipercaya oleh 50,000+ Orang Tua di Indonesia</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Modal Login -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Login ke KidzzUp!</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <section id="videos" class="py-5">
+        <div class="container">
+            <div class="row mb-4 mb-md-5 align-items-center text-center text-md-start">
+                <div class="col-md-7 col-lg-8 mb-4 mb-md-0">
+                    <h2 class="display-6 display-md-5 fw-bold text-dark">Eksplorasi Dunia Pengetahuan</h2>
+                    <p class="text-muted mb-0">Pilih kelas dan mulai petualangan belajarmu hari ini.</p>
                 </div>
-                <div class="modal-body">
+                <div class="col-md-5 col-lg-4">
+                    <div class="input-group shadow-sm rounded-pill overflow-hidden border">
+                        <span class="input-group-text bg-white border-0 ps-3 ps-md-4"><i class="bi bi-search text-primary"></i></span>
+                        <input type="text" id="searchInput" class="form-control border-0 py-2 py-md-3" placeholder="Cari topik..." onkeyup="searchVideos()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bagian Filter yang Dirapikan -->
+            <div class="filter-wrapper mb-5">
+                <div class="filter-scroll-container" id="filterContainer">
+                    <button class="btn btn-outline-primary rounded-pill filter-btn active" onclick="filterVideos('all', this)">Semua</button>
+                    <button class="btn btn-outline-primary rounded-pill filter-btn" onclick="filterVideos('1', this)">Kelas 1</button>
+                    <button class="btn btn-outline-primary rounded-pill filter-btn" onclick="filterVideos('2', this)">Kelas 2</button>
+                    <button class="btn btn-outline-primary rounded-pill filter-btn" onclick="filterVideos('3', this)">Kelas 3</button>
+                    <button class="btn btn-outline-primary rounded-pill filter-btn" onclick="filterVideos('4', this)">Kelas 4</button>
+                    <button class="btn btn-outline-primary rounded-pill filter-btn" onclick="filterVideos('5', this)">Kelas 5</button>
+                    <button class="btn btn-outline-primary rounded-pill filter-btn" onclick="filterVideos('6', this)">Kelas 6</button>
+                </div>
+            </div>
+
+            <div class="row g-4" id="videoContainer">
+                <!-- Video 1 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="1">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/p6C1icRnUm4" title="Membaca Jam" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 1 - Matematika</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Membaca Jam</h5>
+                            <p class="text-muted small mb-0">Belajar membaca jam dengan animasi yang seru dan mudah dipahami.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 2 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="2">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/dldAyGWvGZs" title="Pecahan" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 2 - Matematika</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Pecahan</h5>
+                            <p class="text-muted small mb-0">Mengenal konsep pecahan sederhana dengan cara menyenangkan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 3 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="3">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/IH4oIGKkXJs" title="Dunia Hewan" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 3 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Dunia Hewan</h5>
+                            <p class="text-muted small mb-0">Belajar mengenal berbagai jenis hewan dengan visual interaktif.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 4 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="4">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/N6XcTch1l2c" title="Perubahan Wujud Benda" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 4 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Perubahan Wujud Benda</h5>
+                            <p class="text-muted small mb-0">Eksperimen seru tentang perubahan benda dari padat ke cair dan gas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 5 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="4">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/u58LYXrZk2M" title="Aku dan Kebutuhanku" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 4 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Aku dan Kebutuhanku</h5>
+                            <p class="text-muted small mb-0">Memahami kebutuhan primer, sekunder, dan tersier sehari-hari.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 6 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="5">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/FSjvNqLg1bI" title="Kelipatan Persekutuan" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 5 - Matematika</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Kelipatan Persekutuan</h5>
+                            <p class="text-muted small mb-0">Belajar menentukan kelipatan persekutuan dengan mudah.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 7 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="6">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/vfbpXX22BNs" title="Sistem Tata Surya" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 6 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Sistem Tata Surya</h5>
+                            <p class="text-muted small mb-0">Menjelajahi planet dan benda langit dalam tata surya.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 8 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="5">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/qSaYq1_cetU" title="Simbiosis" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 5 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Simbiosis</h5>
+                            <p class="text-muted small mb-0">Mengenal hubungan antar makhluk hidup dalam ekosistem.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 9 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="6">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/xy8pf-1u-4c" title="Tata Surya" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 6 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">IPAS - Tata Surya</h5>
+                            <p class="text-muted small mb-0">Belajar tentang planet dan benda langit secara interaktif.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 10 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="4">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/a5t6NrAPZ0Q" title="Tumbuhan Sumber Kehidupan" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 4 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Tumbuhan Sumber Kehidupan</h5>
+                            <p class="text-muted small mb-0">Memahami pentingnya tumbuhan bagi kehidupan di bumi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 11 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="3">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/gh6m5zneMu4" title="Metamorfosis" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 3 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Metamorfosis</h5>
+                            <p class="text-muted small mb-0">Belajar perubahan bentuk makhluk hidup secara menarik.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 12 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="6">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/pN50pQ7L-G8" title="Tata Surya" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 6 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">IPAS - Tata Surya</h5>
+                            <p class="text-muted small mb-0">Mengenal sistem tata surya dan susunan planet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 13 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="5">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/pL8gcqYQ1CQ" title="Sistem Pencernaan Manusia" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 5 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Sistem Pencernaan Manusia</h5>
+                            <p class="text-muted small mb-0">Memahami proses pencernaan makanan dalam tubuh manusia.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 14 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="5">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/HRYLGN9NYqs" title="Ekosistem Laut" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 5 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Ekosistem Laut</h5>
+                            <p class="text-muted small mb-0">Belajar tentang kehidupan dan keseimbangan ekosistem laut.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 15 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="4">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/d1DZQHoWWPw" title="Perkembangbiakan Tumbuhan" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 4 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Perkembangbiakan Tumbuhan</h5>
+                            <p class="text-muted small mb-0">Mengenal cara tumbuhan berkembang biak secara alami dan buatan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 16 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="4">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/LhFioYB-UTE" title="Bagian-bagian Tumbuhan" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 4 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Bagian-bagian Tumbuhan</h5>
+                            <p class="text-muted small mb-0">Belajar mengenal akar, batang, daun, bunga, dan fungsinya.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 17 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="5">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/HIKswP49Blg" title="Bunyi dan Sifatnya" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 5 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Bunyi dan Sifatnya</h5>
+                            <p class="text-muted small mb-0">Mengenal sumber bunyi dan bagaimana bunyi dapat merambat.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 18 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="4">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/E-8uoLV6ANU" title="Hewan di Dataran Tinggi dan Pantai" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 4 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Hewan di Dataran Tinggi dan Pantai</h5>
+                            <p class="text-muted small mb-0">Belajar habitat hewan di dataran tinggi, rendah, dan pantai.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 19 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="6">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/FVZqX7FEBoc" title="Mengenal Tata Surya" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 6 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Mengenal Tata Surya</h5>
+                            <p class="text-muted small mb-0">Menjelajahi planet dan benda langit dalam tata surya kita.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 20 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="3">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/cNjw6di0f1M" title="Sumber Energi dan Manfaatnya" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 3 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Sumber Energi dan Manfaatnya</h5>
+                            <p class="text-muted small mb-0">Mengenal berbagai sumber energi dan manfaatnya dalam kehidupan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 21 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="5">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/_eCMsp7jfMo" title="Harmoni dalam Ekosistem" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 5 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Harmoni dalam Ekosistem</h5>
+                            <p class="text-muted small mb-0">Belajar menjaga keseimbangan makhluk hidup dalam ekosistem.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 22 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="4">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/65Yv2V28uIs" title="Bagian-bagian Tumbuhan dan Fungsinya" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 4 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Bagian Tumbuhan dan Fungsinya</h5>
+                            <p class="text-muted small mb-0">Mengenal fungsi setiap bagian tumbuhan secara lengkap.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 23 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="4">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/Kpn6sN2czeE" title="Aku dan Kebutuhanku" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 4 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Aku dan Kebutuhanku</h5>
+                            <p class="text-muted small mb-0">Belajar memahami kebutuhan manusia dalam kehidupan sehari-hari.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 24 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="5">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/VACtIkH11H8" title="Ekosistem Laut" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 5 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Ekosistem Laut</h5>
+                            <p class="text-muted small mb-0">Mengenal kehidupan laut dan keseimbangan ekosistem bawah air.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 25 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="4">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/-1flPRyyGCc" title="Bagian Tumbuhan dan Fungsinya" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 4 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Bagian Tumbuhan dan Fungsinya</h5>
+                            <p class="text-muted small mb-0">Belajar fungsi akar, batang, daun, bunga, dan buah pada tumbuhan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 26 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="6">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/QPPL4FC8IlU" title="Fenomena Bencana Alam" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 6 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Fenomena Bencana Alam</h5>
+                            <p class="text-muted small mb-0">Mengenal jenis bencana alam dan cara pencegahannya.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 27 -->
+                <div class="col-lg-4 col-md-6 video-item" data-kelas="6">
+                    <div class="video-card">
+                        <div class="ratio ratio-16x9">
+                            <iframe src="https://www.youtube.com/embed/6fpHeudFCBI" title="Revolusi dan Rotasi Bumi" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill">Kelas 6 - IPAS</span>
+                                <span class="badge-free">FREE</span>
+                            </div>
+                            <h5 class="fw-bold">Revolusi dan Rotasi Bumi</h5>
+                            <p class="text-muted small mb-0">Belajar proses rotasi dan revolusi bumi beserta dampaknya.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="benefitModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0">
+                    <h4 class="fw-bold">Mengapa KidzzUp! Gratis?</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <div class="mb-4 text-primary fs-1"><i class="bi bi-heart-pulse-fill"></i></div>
+                    <p class="lead">Kami percaya setiap anak Indonesia berhak mendapatkan pendidikan berkualitas tanpa terhalang biaya.</p>
+                    <div class="text-start mt-4">
+                        <div class="d-flex gap-3 mb-3">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <p class="mb-0"><strong>Tanpa Biaya Bulanan:</strong> Selamanya Rp 0.</p>
+                        </div>
+                        <div class="d-flex gap-3 mb-3">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <p class="mb-0"><strong>Kualitas Premium:</strong> Materi disusun oleh guru berpengalaman.</p>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <p class="mb-0"><strong>Dukung Kami:</strong> Bantu sebarkan website ini agar lebih banyak anak yang terbantu!</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-100 rounded-pill mt-4 py-2 fw-bold" data-bs-dismiss="modal">Siap Belajar!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="floating-mascot mx-auto">
+                            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="100" cy="100" r="90" fill="#4facfe" class="pulse-light"/>
+                                <g transform="translate(50, 40)">
+                                    <!-- Helm Astronot -->
+                                    <rect x="10" y="10" width="80" height="70" rx="35" fill="white" stroke="#333" stroke-width="4"/>
+                                    <rect x="20" y="25" width="60" height="35" rx="15" fill="#e3f2fd"/>
+                                    <!-- Mata Berkedip -->
+                                    <circle cx="40" cy="42" r="4" fill="#333">
+                                        <animate attributeName="ry" values="4;0;4" dur="3s" repeatCount="indefinite" />
+                                    </circle>
+                                    <circle cx="60" cy="42" r="4" fill="#333">
+                                        <animate attributeName="ry" values="4;0;4" dur="3s" repeatCount="indefinite" />
+                                    </circle>
+                                    <!-- Badan -->
+                                    <path d="M20 80 Q50 110 80 80" fill="none" stroke="white" stroke-width="20" stroke-linecap="round"/>
+                                    <path d="M35 100 L35 120 M65 100 L65 120" stroke="white" stroke-width="8" stroke-linecap="round"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <h3 class="fw-bold">Halo Sobat KidzzUp! 👋</h3>
+                        <p class="text-muted">Masuk untuk simpan progress belajarmu dan koleksi bintang!</p>
+                    </div>
                     <form id="loginForm">
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Masukkan email Anda" required>
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control rounded-pill px-3 py-2" id="userEmail" placeholder="nama@gmail.com" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control rounded-pill px-3 py-2" id="userPass" placeholder="******" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow">Masuk Ke Dashboard</button>
+                    </form>
+                    <div class="text-center mt-4">
+                        <p class="small">Belum punya akun? <a href="javascript:void(0)" onclick="switchModal('loginModal', 'registerModal')" class="text-primary fw-bold text-decoration-none">Daftar Gratis</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="floating-mascot mx-auto">
+                            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="100" cy="100" r="90" fill="#feca57" class="pulse-light"/>
+                                <g transform="translate(55, 60)">
+                                    <!-- Kotak Hadiah -->
+                                    <rect x="0" y="20" width="90" height="70" rx="10" fill="#ff6b6b" stroke="#333" stroke-width="4"/>
+                                    <rect x="0" y="45" width="90" height="20" fill="#ee5253"/>
+                                    <rect x="35" y="20" width="20" height="70" fill="#feca57"/>
+                                    <!-- Pita Bergerak -->
+                                    <path d="M45 20 C20 -10 0 20 45 20 C90 20 70 -10 45 20" fill="#feca57" stroke="#333" stroke-width="3">
+                                        <animateTransform attributeName="transform" type="rotate" values="-5 45 20; 5 45 20; -5 45 20" dur="2s" repeatCount="indefinite" />
+                                    </path>
+                                </g>
+                            </svg>
+                        </div>
+                        <h3 class="fw-bold">Daftar Akun Baru ✨</h3>
+                        <p class="text-muted">Mulai petualangan belajarmu sekarang!</p>
+                    </div>
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control rounded-pill px-3 py-2" id="regName" placeholder="Nama Kamu" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" placeholder="Masukkan password Anda" required>
+                            <label class="form-label">Email (@gmail.com)</label>
+                            <input type="email" class="form-control rounded-pill px-3 py-2" id="regEmail" placeholder="nama@gmail.com" required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                        <div class="mb-4">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control rounded-pill px-3 py-2" id="regPass" placeholder="Minimal 6 karakter" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 py-3 fw-bold rounded-pill shadow">Buat Akun Gratis</button>
                     </form>
-                    <small class="text-muted mt-2 d-block">Belum punya akun? <a href="#" data-bs-toggle="modal" data-bs-target="#subscriptionModal">Daftar di sini</a></small>
+                    <div class="text-center mt-4">
+                        <p class="small">Sudah punya akun? <a href="javascript:void(0)" onclick="switchModal('registerModal', 'loginModal')" class="text-primary fw-bold text-decoration-none">Masuk di sini</a></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Alert untuk Berlangganan -->
-    <div class="modal fade" id="subscriptionModal" tabindex="-1" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="subscriptionModalLabel">Berlangganan KidzzUp!</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Dapatkan akses penuh ke semua video pembelajaran dan materi eksklusif!</p>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-success" onclick="alert('Redirect ke pembayaran untuk Rp100.000/bulan')">Berlangganan 1 Bulan - Rp100.000</button>
-                        <button class="btn btn-info" onclick="alert('Trial 1 minggu dimulai! Daftar di sini')">Coba Trial 1 Minggu (Gratis)</button>
-                    </div>
-                    <small class="text-muted mt-2 d-block">* Trial berlaku untuk akses terbatas. Pembayaran via transfer atau e-wallet.</small>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Video Pembelajaran Section -->
-    <section id="videos" class="video-section">
+    <footer class="bg-dark text-white py-5 mt-5">
         <div class="container">
-            <h2 class="text-center mb-4">Video Pembelajaran Seru</h2>
-            <p class="text-center mb-5">Tonton dan pelajari berbagai materi langsung dari KidzzUp!. Klik play dan mulai!</p>
-            
-            <!-- Input Pencarian -->
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Cari video berdasarkan judul atau deskripsi..." onkeyup="searchVideos()">
-            </div>
-            
-           <!-- Tombol Filter Kelas -->
-            <div class="filter-buttons">
-                <button class="btn btn-outline-primary" onclick="filterVideos('all')">Semua</button>
-                <button class="btn btn-outline-primary" onclick="filterVideos('1')">Kelas 1</button>
-                <button class="btn btn-outline-primary" onclick="filterVideos('2')">Kelas 2</button>
-                <button class="btn btn-outline-primary" onclick="filterVideos('3')">Kelas 3</button>
-                <button class="btn btn-outline-primary" onclick="filterVideos('4')">Kelas 4</button>
-                <button class="btn btn-outline-primary" onclick="filterVideos('5')">Kelas 5</button>
-                <button class="btn btn-outline-primary" onclick="filterVideos('6')">Kelas 6</button>
-            </div>
-            
-            <div class="row" id="videoContainer">
-                <!-- Video 1: Kelas 1 -->
-                <div class="col-md-4 col-sm-6 video-card" data-kelas="1">
-                    <div class="video-card">
-                        <iframe src="https://www.youtube.com/embed/p6C1icRnUm4" title="Video Matematika Kelas 1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                        <div class="p-3">
-                            <h5>Membaca Jam (Kelas 1)</h5>
-                            <p>Video animasi anak membaca jam.</p>
-                        </div>
+            <div class="row g-4 text-center text-md-start">
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="fw-bold text-primary mb-3">Kidzz<span class="text-warning">Up!</span></h4>
+                    <p class="text-white-50">Platform edukasi gratis terbaik untuk anak SD. Belajar asyik, masa depan apik!</p>
+                    <div class="d-flex gap-3 fs-4 justify-content-center justify-content-md-start mt-3">
+                        <i class="bi bi-instagram cursor-pointer text-white-50"></i>
+                        <i class="bi bi-youtube cursor-pointer text-white-50"></i>
+                        <i class="bi bi-tiktok cursor-pointer text-white-50"></i>
                     </div>
                 </div>
-                <!-- Video 2: Kelas 2 -->
-                <div class="col-md-4 col-sm-6 video-card" data-kelas="2">
-                    <div class="video-card">
-                        <iframe src="https://www.youtube.com/embed/dldAyGWvGZs" title="Video Matematika Kelas 2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                        <div class="p-3">
-                            <h5>Pecahan (Kelas 2)</h5>
-                            <p>Video Pembelajaran Mengenal Pecahan.</p>
-                        </div>
-                    </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="fw-bold mb-3">Tautan Cepat</h5>
+                    <ul class="list-unstyled text-white-50">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-link">Tentang Kami</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-link">Kebijakan Privasi</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-link">Syarat & Ketentuan</a></li>
+                    </ul>
                 </div>
-                <!-- Video 3: Kelas 3 -->
-                <div class="col-md-4 col-sm-6 video-card" data-kelas="3">
-                    <div class="video-card">
-                        <iframe src="https://www.youtube.com/embed/IH4oIGKkXJs" title="Video IPAS Kelas 3" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                        <div class="p-3">
-                            <h5>Dunia Hewan (Kelas 3)</h5>
-                            <p>Game Smart IPAS Mengenal Hewan.</p>
-                        </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="fw-bold mb-3">Akses Website</h5>
+                    <div class="bg-white p-2 d-inline-block rounded-3 mb-2 shadow-sm">
+                        <img src="images/qrkidzupp.png" alt="QR Code Akses" class="img-fluid" style="width: 100px; height: 100px;">
                     </div>
+                    <p class="small text-white-50 mb-0">Scan untuk akses cepat</p>
+                    <a href="https://www.kidzzup.com" class="text-warning fw-bold text-decoration-none small">tiny.cc/Kidzzup</a>
                 </div>
-                 <!-- Video 4: Kelas 4 -->
-                <div class="col-md-4 col-sm-6 video-card" data-kelas="4">
-                    <div class="video-card">
-                        <iframe src="https://www.youtube.com/embed/N6XcTch1l2c" title="Video IPAS Kelas 4" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                        <div class="p-3">
-                            <h5>Perubahan Wujud Benda (Kelas 4)</h5>
-                            <p>Macam-macam Perubahan Wujud Benda.</p>
-                        </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="fw-bold mb-3">Donasi Platform</h5>
+                    <div class="bg-white p-2 d-inline-block rounded-3 mb-2 shadow-sm" style="border: 2px solid #ff6b6b;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=DONASI_KIDZZUP_QRIS" alt="QR Donasi" class="img-fluid" style="width: 100px; height: 100px;">
                     </div>
-                </div>
-                <!-- Video 5: Kelas 4 -->
-                <div class="col-md-4 col-sm-6 video-card" data-kelas="4">
-                    <div class="video-card">
-                        <iframe src="https://www.youtube.com/embed/u58LYXrZk2M" title="Video IPAS Kelas 4" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                        <div class="p-3">
-                            <h5>Aku dan Kebutuhanku (Kelas 4)</h5>
-                            <p>Materi Aku dan Kebutuhanku.</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Video 6: Kelas 5 -->
-                <div class="col-md-4 col-sm-6 video-card" data-kelas="5">
-                    <div class="video-card">
-                        <iframe src="https://www.youtube.com/embed/FSjvNqLg1bI" title="Video Matematika Kelas 5" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                        <div class="p-3">
-                            <h5>Kelipatan Persekutuan (Kelas 5)</h5>
-                            <p>Mengenal Kelipatan Persekutuan.</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Video 7: Kelas 6 -->
-                <div class="col-md-4 col-sm-6 video-card" data-kelas="6">
-                    <div class="video-card">
-                        <iframe src="https://www.youtube.com/embed/vfbpXX22BNs" title="Video IPAS Kelas 6" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                        <div class="p-3">
-                            <h5>Sistem Tata Surya (Kelas 6)</h5>
-                            <p>Pengenalan Tata Surya.</p>
-                        </div>
-                    </div>
-                </div>
-                 <!-- Video 8: Kelas 2 -->
-                <div class="col-md-4 col-sm-6 video-card" data-kelas="2">
-                    <div class="video-card">
-                        <iframe src="https://www.youtube.com/embed/c96Yu05piNQ" title="Video Pendidikan Pancasila Kelas 2" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                        <div class="p-3">
-                            <h5>Pendidikan Pancasila (Kelas 2)</h5>
-                            <p>Pendidikan Pancasila.</p>
-                        </div>
-                    </div>
+                    <p class="small text-white-50 mb-0">Dukung operasional kami</p>
+                    <span class="text-warning fw-bold small">Dukung via Saweria / QRIS</span>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <p>&copy; 2025 KidzzUp! Bimbel Online SD. Semua hak dilindungi.</p>
-            <p>Kontak: kidzzup@gmail.com | Telepon: 0857-0212-7777</p>
+            <hr class="my-4 border-secondary">
+            <p class="text-center text-white-50 small mb-0">&copy; 2025 KidzzUp! Indonesia. Semua Konten Gratis Selamanya.</p>
+            <p class="text-center text-white-50 small mb-0">Kontak: riodwi2807@gmail.com | Author: Rio Dwi Permana</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Script untuk Banner Alert, Filter, Pencarian, dan Login -->
+
     <script>
-        window.onload = function() {
-            document.getElementById('welcomeBanner').style.display = 'block';
+        // --- State Management ---
+        let authState = {
+            isLoggedIn: localStorage.getItem('kidzup_login') === 'true',
+            email: localStorage.getItem('kidzup_email') || ''
         };
-        function closeBanner() {
-            document.getElementById('welcomeBanner').style.display = 'none';
-        }
-        // Fungsi Filter Video dengan Animasi Fade
-        function filterVideos(kelas) {
-            const videos = document.querySelectorAll('[data-kelas]');
-            videos.forEach(video => {
-                if (kelas === 'all' || video.getAttribute('data-kelas') === kelas) {
-                    video.style.opacity = '0'; // Fade out dulu
-                    setTimeout(() => {
-                        video.style.display = 'block';
-                        video.style.opacity = '1'; // Fade in
-                    }, 250); // Delay untuk efek
-                } else {
-                    video.style.opacity = '0'; // Fade out
-                    setTimeout(() => {
-                        video.style.display = 'none';
-                    }, 500); // Tunggu fade selesai
+
+        // Mengambil data user yang sudah terdaftar dari localStorage
+        let registeredUsers = JSON.parse(localStorage.getItem('kidzup_users')) || [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNavbar();
+            initFireworks(); // Menjalankan kembang api saat load
+        });
+
+        function initFireworks() {
+            const canvas = document.getElementById('fireworksCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            
+            // Menyesuaikan ukuran canvas dengan hero section
+            function resize() {
+                const hero = document.getElementById('hero');
+                canvas.width = hero.offsetWidth;
+                canvas.height = hero.offsetHeight;
+            }
+            
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor(x, y, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.color = color;
+                    this.velocity = {
+                        x: (Math.random() - 0.5) * 8,
+                        y: (Math.random() - 0.5) * 8
+                    };
+                    this.alpha = 1;
+                    this.friction = 0.95;
+                    this.gravity = 0.2;
                 }
-            });
-        }
-        // Fungsi Pencarian Video
-        function searchVideos() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const videos = document.querySelectorAll('[data-kelas]');
-            videos.forEach(video => {
-                const title = video.querySelector('h5').textContent.toLowerCase();
-                const desc = video.querySelector('p').textContent.toLowerCase();
-                if (title.includes(query) || desc.includes(query)) {
-                    video.style.opacity = '0';
-                    setTimeout(() => {
-                        video.style.display = 'block';
-                        video.style.opacity = '1';
-                    }, 250);
-                } else {
-                    video.style.opacity = '0';
-                    setTimeout(() => {
-                        video.style.display = 'none';
-                    }, 500);
+
+                draw() {
+                    ctx.globalAlpha = this.alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
                 }
-            });
+
+                update() {
+                    this.velocity.x *= this.friction;
+                    this.velocity.y *= this.friction;
+                    this.velocity.y += this.gravity;
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+                    this.alpha -= 0.01;
+                }
+            }
+
+            function createFirework() {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * (canvas.height * 0.5); // Muncul di bagian atas
+                const colors = ['#ffffff', '#feca57', '#ff6b6b', '#2ecc71', '#00f2fe'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                for (let i = 0; i < 30; i++) {
+                    particles.push(new Particle(x, y, color));
+                }
+            }
+
+            function animate() {
+                // Memberikan efek trail sedikit
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                if (Math.random() < 0.03) { // Kontrol frekuensi ledakan
+                    createFirework();
+                }
+
+                particles.forEach((particle, index) => {
+                    if (particle.alpha > 0) {
+                        particle.update();
+                        particle.draw();
+                    } else {
+                        particles.splice(index, 1);
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
         }
-        // Fungsi Handle Login Form
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            // Demo: Alert konfirmasi (ganti dengan AJAX ke backend untuk autentikasi nyata)
-            if (email && password) {
-                alert(`Login berhasil untuk email: ${email}!`);
-                // Tutup modal setelah login
-                const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                modal.hide();
+
+        function switchModal(fromId, toId) {
+            bootstrap.Modal.getInstance(document.getElementById(fromId)).hide();
+            setTimeout(() => {
+                const toModal = new bootstrap.Modal(document.getElementById(toId));
+                toModal.show();
+            }, 500);
+        }
+
+        // --- Registration Logic ---
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+
+            // Validasi domain @gmail.com
+            if (!email.endsWith('@gmail.com')) {
+                showErrorAlert('Maaf, pendaftaran hanya bisa menggunakan @gmail.com');
+                return;
+            }
+
+            // Cek apakah email sudah terdaftar
+            if (registeredUsers.find(u => u.email === email)) {
+                showErrorAlert('Email ini sudah terdaftar! Silakan login.');
+                return;
+            }
+
+            // Simpan user baru
+            registeredUsers.push({ name, email, pass });
+            localStorage.setItem('kidzup_users', JSON.stringify(registeredUsers));
+
+            showAlert(`Pendaftaran Berhasil! Halo ${name}, silakan login sekarang.`);
+            switchModal('registerModal', 'loginModal');
+        });
+
+        // --- Login Logic ---
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('userEmail').value;
+            const pass = document.getElementById('userPass').value;
+            
+            // Validasi domain @gmail.com saat login
+            if (!email.endsWith('@gmail.com')) {
+                showErrorAlert('Gagal Login! Harus menggunakan email @gmail.com');
+                return;
+            }
+
+            // Validasi apakah user terdaftar dan password cocok
+            const user = registeredUsers.find(u => u.email === email && u.pass === pass);
+
+            if (user) {
+                authState.isLoggedIn = true;
+                authState.email = email;
+                localStorage.setItem('kidzup_login', 'true');
+                localStorage.setItem('kidzup_email', email);
+
+                bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                showAlert(`Selamat datang kembali, ${user.name}! 🚀`);
+                updateNavbar();
             } else {
-                alert('Harap isi email dan password!');
+                showErrorAlert('Email belum terdaftar atau password salah!');
             }
         });
+        // --- STREAMING_CHUNK: Memperbarui fungsi Filter Video dengan efek Fade ---
+        function filterVideos(kelas, btn) {
+            // Update status tombol aktif
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const items = document.querySelectorAll('.video-item');
+            
+            items.forEach(item => {
+                const itemKelas = item.getAttribute('data-kelas');
+                
+                if (kelas === 'all' || itemKelas === kelas) {
+                    // Jika cocok: Berikan animasi masuk
+                    item.style.display = 'block';
+                    item.classList.remove('video-animate-out');
+                    item.classList.add('video-animate-in');
+                } else {
+                    // Jika tidak cocok: Berikan animasi keluar dulu baru sembunyikan
+                    item.classList.remove('video-animate-in');
+                    item.classList.add('video-animate-out');
+                    
+                    // Sembunyikan elemen setelah animasi keluar selesai (400ms)
+                    setTimeout(() => {
+                        if (item.classList.contains('video-animate-out')) {
+                            item.style.display = 'none';
+                        }
+                    }, 400);
+                }
+            });        }
+
+        // --- STREAMING_CHUNK: Memperbarui fungsi Pencarian agar mendukung kata kunci 'Kelas' ---
+        function searchVideos() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const items = document.querySelectorAll('.video-item');
+            
+            items.forEach(item => {
+                const title = item.querySelector('h5').innerText.toLowerCase();
+                const desc = item.querySelector('p').innerText.toLowerCase();
+                // Menambahkan pengecekan pada badge kategori (Kelas & Mapel)
+                const category = item.querySelector('.badge.bg-primary').innerText.toLowerCase();
+                
+                if (title.includes(query) || desc.includes(query) || category.includes(query)) {
+                    if (item.style.display === 'none' || item.classList.contains('video-animate-out')) {
+                        item.style.display = 'block';
+                        item.classList.remove('video-animate-out');
+                        item.classList.add('video-animate-in');
+                    }
+                } else {
+                    item.classList.remove('video-animate-in');
+                    item.classList.add('video-animate-out');
+                    setTimeout(() => {
+                        // Pastikan elemen benar-benar disembunyikan setelah animasi
+                        if (item.classList.contains('video-animate-out')) {
+                            item.style.display = 'none';
+                        }
+                    }, 400);
+                }
+            });
+        }
+
+        // --- UI Utilities ---
+        function showAlert(msg) {
+            const alertBox = document.getElementById('customAlert');
+            alertBox.className = "alert alert-success alert-dismissible fade show shadow-lg";
+            document.getElementById('alertMessage').innerText = msg;
+            alertBox.style.display = 'block';
+            setTimeout(hideAlert, 5000);
+        }
+
+        function showErrorAlert(msg) {
+            const alertBox = document.getElementById('customAlert');
+            alertBox.className = "alert alert-danger alert-dismissible fade show shadow-lg";
+            document.getElementById('alertMessage').innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i> ${msg}`;
+            alertBox.style.display = 'block';
+            setTimeout(hideAlert, 5000);
+        }
+
+        function hideAlert() {
+            document.getElementById('customAlert').style.display = 'none';
+        }
+
+        function updateNavbar() {
+            const placeholder = document.getElementById('authPlaceholder');
+            if (authState.isLoggedIn) {
+                const user = registeredUsers.find(u => u.email === authState.email);
+                const initial = user ? user.name.charAt(0).toUpperCase() : 'U';
+                placeholder.innerHTML = `
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="user-avatar">${initial}</div>
+                        <div class="d-none d-sm-block">
+                            <small class="text-muted d-block" style="font-size: 0.7rem">Halo,</small>
+                            <span class="fw-bold text-dark">${user ? user.name.split(' ')[0] : 'Sobat'}</span>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="logout()">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            } else {
+                placeholder.innerHTML = `
+                    <button class="btn btn-outline-primary rounded-pill px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="bi bi-person-circle me-2"></i>Masuk
+                    </button>
+                `;
+            }
+        }
+
+        function logout() {
+            authState.isLoggedIn = false;
+            authState.email = '';
+            localStorage.setItem('kidzup_login', 'false');
+            localStorage.removeItem('kidzup_email');
+            updateNavbar();
+            showAlert('Anda telah keluar. Sampai jumpa lagi! 👋');
+        }
     </script>
-    <script>
-    // Smooth Scroll untuk Navigasi
-    document.querySelectorAll('a.nav-link').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            // Jika href mulai dari "#"
-            if (this.getAttribute('href').startsWith('#')) {
-                e.preventDefault();
-                const targetID = this.getAttribute('href');
-                const target
+
+    <style>
+        .filter-wrapper {
+            background: #fff;
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+        }
+
+        @media (max-width: 576px) {
+            .filter-btn {
+                padding: 6px 15px !important; /* Lebih ramping di HP layar kecil */
+                font-size: 0.85rem;
+            }
+            .filter-scroll-container {
+                gap: 8px;
+            }
+        }
+    </style>
+</body>
+</html>
