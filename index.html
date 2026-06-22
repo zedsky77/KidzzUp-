@@ -38,21 +38,6 @@
             overflow: hidden;
         }
 
-        #fireworksCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Agar tidak menghalangi klik pada tombol */
-            z-index: 1;
-        }
-
-        .hero .container {
-            position: relative;
-            z-index: 2; /* Menempatkan konten di atas kembang api */
-        }
-
         /* Elemen dekoratif marketing */
         .hero::before {
             content: 'FREE';
@@ -302,7 +287,6 @@
     </nav>
 
     <section id="hero" class="hero d-flex align-items-center">
-        <canvas id="fireworksCanvas"></canvas>
         
         <div class="container text-center">
             <div class="row justify-content-center">
@@ -997,98 +981,8 @@
         let registeredUsers = JSON.parse(localStorage.getItem('kidzup_users')) || [];
 
         document.addEventListener('DOMContentLoaded', () => {
-            updateNavbar();
-            initFireworks(); // Menjalankan kembang api saat load
-        });
-
-        function initFireworks() {
-            const canvas = document.getElementById('fireworksCanvas');
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            
-            // Menyesuaikan ukuran canvas dengan hero section
-            function resize() {
-                const hero = document.getElementById('hero');
-                canvas.width = hero.offsetWidth;
-                canvas.height = hero.offsetHeight;
-            }
-            
-            window.addEventListener('resize', resize);
-            resize();
-
-            class Particle {
-                constructor(x, y, color) {
-                    this.x = x;
-                    this.y = y;
-                    this.color = color;
-                    this.velocity = {
-                        x: (Math.random() - 0.5) * 8,
-                        y: (Math.random() - 0.5) * 8
-                    };
-                    this.alpha = 1;
-                    this.friction = 0.95;
-                    this.gravity = 0.2;
-                }
-
-                draw() {
-                    ctx.globalAlpha = this.alpha;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color;
-                    ctx.fill();
-                }
-
-                update() {
-                    this.velocity.x *= this.friction;
-                    this.velocity.y *= this.friction;
-                    this.velocity.y += this.gravity;
-                    this.x += this.velocity.x;
-                    this.y += this.velocity.y;
-                    this.alpha -= 0.01;
-                }
-            }
-
-            function createFirework() {
-                const x = Math.random() * canvas.width;
-                const y = Math.random() * (canvas.height * 0.5); // Muncul di bagian atas
-                const colors = ['#ffffff', '#feca57', '#ff6b6b', '#2ecc71', '#00f2fe'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                for (let i = 0; i < 30; i++) {
-                    particles.push(new Particle(x, y, color));
-                }
-            }
-
-            function animate() {
-                // Memberikan efek trail sedikit
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                if (Math.random() < 0.03) { // Kontrol frekuensi ledakan
-                    createFirework();
-                }
-
-                particles.forEach((particle, index) => {
-                    if (particle.alpha > 0) {
-                        particle.update();
-                        particle.draw();
-                    } else {
-                        particles.splice(index, 1);
-                    }
-                });
-
-                requestAnimationFrame(animate);
-            }
-
-            animate();
-        }
-
-        function switchModal(fromId, toId) {
-            bootstrap.Modal.getInstance(document.getElementById(fromId)).hide();
-            setTimeout(() => {
-                const toModal = new bootstrap.Modal(document.getElementById(toId));
-                toModal.show();
-            }, 500);
-        }
+        updateNavbar();
+        }); 
 
         // --- Registration Logic ---
         document.getElementById('registerForm').addEventListener('submit', function(e) {
